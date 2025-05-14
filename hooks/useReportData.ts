@@ -6,6 +6,9 @@ export interface FinancialReportRow {
   note?: string;
   fy2024Value?: number | string;
   fy2023Value?: number | string;
+  surplus?: number | string;
+  adjustments?: number | string;
+  total?: number | string;
   isTotal?: boolean;
   indentLevel?: number;
   sectionKey?: string;
@@ -17,6 +20,7 @@ export interface FinancialReportSection {
   key: string;
   rows: FinancialReportRow[];
   subsections?: FinancialReportSection[];
+  isSummarySection?: boolean;
 }
 
 // Type for the entire report
@@ -228,12 +232,86 @@ export function useReportData(reportType: string): FinancialReport {
             loading: false,
             error: null,
           });
+        } else if (reportType === 'changes-assets') {
+          setReport({
+            title: {
+              governmentBody: 'Government of Rwanda',
+              program: 'HIV/NSP Budget Support of KIGEME District Hospital',
+              reportType: 'Financial Statement for the Year Ended 31 December 2024',
+              statement: 'Statement of Changes in Net Assets for the Year Ended 31 December 2024',
+            },
+            sections: [
+              {
+                title: 'FY 2022/2023',
+                key: 'fy-2022-2023',
+                isSummarySection: false,
+                rows: [
+                  { label: 'Balances as at 01 July 2022', isTotal: true, surplus: 15000000, adjustments: 0, total: 15000000 },
+                ],
+                subsections: [
+                  {
+                    title: '1. Prior Year Adjustments',
+                    key: 'prior-year-2022',
+                    rows: [
+                      { label: 'Cash and cash equivalents', indentLevel: 1, surplus: 0, adjustments: 120000, total: 120000 },
+                      { label: 'Receivables and other financial assets', indentLevel: 1, surplus: 0, adjustments: 85000, total: 85000 },
+                      { label: 'Investments', indentLevel: 1, surplus: 0, adjustments: -50000, total: -50000 },
+                      { label: 'Payables and other liabilities', indentLevel: 1, surplus: 0, adjustments: -75000, total: -75000 },
+                      { label: 'Borrowing', indentLevel: 1, surplus: 0, adjustments: -200000, total: -200000 },
+                      { label: 'Net surplus/(deficit) for the year', indentLevel: 1, surplus: 1200000, adjustments: 0, total: 1200000 },
+                      { label: 'Total Adjustments', indentLevel: 0, isTotal: true, surplus: 1200000, adjustments: -120000, total: 1080000 },
+                    ]
+                  }
+                ]
+              },
+              {
+                title: 'Balances as at 30 June 2024',
+                key: 'balance-2024-june',
+                isSummarySection: false,
+                rows: [
+                  { label: 'Balances as at 30 June 2024', isTotal: true, surplus: 16200000, adjustments: -120000, total: 16080000 },
+                ],
+              },
+              {
+                title: 'FY 2023/2024',
+                key: 'fy-2023-2024',
+                isSummarySection: false,
+                rows: [
+                  { label: 'Balances as at 30 July 2023', isTotal: true, surplus: 16200000, adjustments: -120000, total: 16080000 },
+                ],
+                subsections: [
+                  {
+                    title: 'Prior Year Adjustments:',
+                    key: 'prior-year-2023',
+                    rows: [
+                      { label: 'Cash and cash equivalents', indentLevel: 1, surplus: 0, adjustments: 150000, total: 150000 },
+                      { label: 'Receivables and other financial assets', indentLevel: 1, surplus: 0, adjustments: 95000, total: 95000 },
+                      { label: 'Investments', indentLevel: 1, surplus: 0, adjustments: -40000, total: -40000 },
+                      { label: 'Payables and other liabilities', indentLevel: 1, surplus: 0, adjustments: -65000, total: -65000 },
+                      { label: 'Borrowing', indentLevel: 1, surplus: 0, adjustments: -180000, total: -180000 },
+                      { label: 'Net surplus/(deficit) for the year', indentLevel: 1, surplus: 1500000, adjustments: 0, total: 1500000 },
+                      { label: 'Total Adjustments', indentLevel: 0, isTotal: true, surplus: 1500000, adjustments: -40000, total: 1460000 },
+                    ]
+                  }
+                ]
+              },
+              {
+                title: 'BALANCES AS AT 30 September 2024',
+                key: 'final-balance',
+                isSummarySection: true,
+                rows: [
+                  { label: 'BALANCES AS AT 30 September 2024', isTotal: true, surplus: 17700000, adjustments: -160000, total: 17540000 },
+                ],
+              },
+            ],
+            loading: false,
+            error: null
+          });
         } else {
-          // For other report types, return an empty structure
           setReport(prev => ({
             ...prev,
-            loading: false,
-            error: null,
+            error: `Report type '${reportType}' not supported`,
+            loading: false
           }));
         }
       } catch (error) {

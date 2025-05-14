@@ -7,4 +7,6 @@ export { FinancialRow } from './FinancialRow';
 export { FinancialSummaryRow } from './FinancialSummaryRow';
 export { SeparatorRow } from './SeparatorRow';
 export { FinancialTableSkeleton } from './FinancialTableSkeleton';
-export { FooterSection } from './FooterSection'; 
+export { FooterSection } from './FooterSection';
+export { NetAssetsRow } from './NetAssetsRow';
+export { NetAssetsSummaryRow } from './NetAssetsSummaryRow'; 
