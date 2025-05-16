@@ -9,4 +9,5 @@ export { SeparatorRow } from './SeparatorRow';
 export { FinancialTableSkeleton } from './FinancialTableSkeleton';
 export { FooterSection } from './FooterSection';
 export { NetAssetsRow } from './NetAssetsRow';
-export { NetAssetsSummaryRow } from './NetAssetsSummaryRow'; 
+export { NetAssetsSummaryRow } from './NetAssetsSummaryRow';
+export { BudgetRow } from './BudgetRow'; 

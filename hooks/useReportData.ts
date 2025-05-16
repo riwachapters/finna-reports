@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 // Type for a basic financial row
 export interface FinancialReportRow {
+  id?: string;
   label: string;
   note?: string;
   fy2024Value?: number | string;
@@ -9,6 +10,11 @@ export interface FinancialReportRow {
   surplus?: number | string;
   adjustments?: number | string;
   total?: number | string;
+  originalBudget?: number | string;
+  revisedBudget?: number | string;
+  actualBudget?: number | string;
+  variance?: number | string;
+  performance?: number | string;
   isTotal?: boolean;
   indentLevel?: number;
   sectionKey?: string;
@@ -21,6 +27,9 @@ export interface FinancialReportSection {
   rows: FinancialReportRow[];
   subsections?: FinancialReportSection[];
   isSummarySection?: boolean;
+  summaryLabel?: string;
+  formulaHint?: string;
+  fy2023SurplusValue?: number | string;
 }
 
 // Type for the entire report
@@ -38,7 +47,7 @@ export interface FinancialReport {
 
 /**
  * Hook to fetch and parse financial report data
- * @param reportType The type of report to load (balance-sheet, cash-flow, etc.)
+ * @param reportType The type of report to load (balance-sheet, cash-flow, changes-assets, budget-actual, revenue-expenditure)
  * @returns Financial report data, loading state, and error state
  */
 export function useReportData(reportType: string): FinancialReport {
@@ -307,18 +316,251 @@ export function useReportData(reportType: string): FinancialReport {
             loading: false,
             error: null
           });
+        } else if (reportType === 'budget-actual') {
+          setReport({
+            title: {
+              governmentBody: 'Government of Rwanda',
+              program: 'HIV/NSP Budget Support of KIGEME District Hospital',
+              reportType: 'Financial Statement for the Year Ended 31 December 2024',
+              statement: 'Statement of Budget vs Actual for the Year Ended 31 December 2024',
+            },
+            sections: [
+              {
+                title: 'RECEIPTS',
+                key: 'receipts',
+                rows: [
+                  { 
+                    label: 'Tax revenue', 
+                    originalBudget: 4500000, 
+                    revisedBudget: 4200000, 
+                    actualBudget: 4250000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Grants and transfers', 
+                    originalBudget: 6800000, 
+                    revisedBudget: 6500000, 
+                    actualBudget: 6600000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Other revenue', 
+                    originalBudget: 350000, 
+                    revisedBudget: 300000, 
+                    actualBudget: 280000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Transfers from public entities', 
+                    originalBudget: 1600000, 
+                    revisedBudget: 1500000, 
+                    actualBudget: 1500000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Total Receipts', 
+                    originalBudget: 13250000, 
+                    revisedBudget: 12500000, 
+                    actualBudget: 12630000,
+                    isTotal: true 
+                  },
+                ]
+              },
+              {
+                title: 'EXPENDITURES',
+                key: 'expenditures',
+                rows: [
+                  { 
+                    label: 'Compensation of employees', 
+                    originalBudget: 5000000, 
+                    revisedBudget: 4800000, 
+                    actualBudget: 4850000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Finance cost', 
+                    originalBudget: 380000, 
+                    revisedBudget: 350000, 
+                    actualBudget: 345000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Subsidies', 
+                    originalBudget: 850000, 
+                    revisedBudget: 800000, 
+                    actualBudget: 810000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Grants and other transfers', 
+                    originalBudget: 1300000, 
+                    revisedBudget: 1200000, 
+                    actualBudget: 1180000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Social assistance', 
+                    originalBudget: 1600000, 
+                    revisedBudget: 1500000, 
+                    actualBudget: 1520000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Other expenses', 
+                    originalBudget: 750000, 
+                    revisedBudget: 700000, 
+                    actualBudget: 695000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Total Payments', 
+                    originalBudget: 9880000, 
+                    revisedBudget: 9350000, 
+                    actualBudget: 9400000,
+                    isTotal: true 
+                  },
+                ]
+              },
+              {
+                title: 'Operating Balance',
+                key: 'operating-balance',
+                rows: [
+                  { 
+                    label: 'Operating Balance', 
+                    originalBudget: 3370000, 
+                    revisedBudget: 3150000, 
+                    actualBudget: 3230000,
+                    isTotal: true 
+                  },
+                ]
+              },
+              {
+                title: 'TRANSACTIONS IN NON-FINANCIAL ASSETS',
+                key: 'non-financial-assets',
+                rows: [
+                  { 
+                    label: 'Capital expenditure', 
+                    originalBudget: 3000000, 
+                    revisedBudget: 2800000, 
+                    actualBudget: 2750000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'Disposal of tangible fixed assets', 
+                    originalBudget: 480000, 
+                    revisedBudget: 450000, 
+                    actualBudget: 460000,
+                    indentLevel: 1 
+                  },
+                  { 
+                    label: 'TOTAL NON-FINANCIAL ASSETS', 
+                    originalBudget: 2520000, 
+                    revisedBudget: 2350000, 
+                    actualBudget: 2290000,
+                    isTotal: true 
+                  },
+                ]
+              },
+              {
+                title: 'BUDGET SURPLUS/(DEFICIT)',
+                key: 'budget-surplus-deficit',
+                isSummarySection: true,
+                rows: [
+                  { 
+                    label: 'BUDGET SURPLUS/(DEFICIT)', 
+                    originalBudget: 850000, 
+                    revisedBudget: 800000, 
+                    actualBudget: 940000,
+                    isTotal: true 
+                  },
+                ]
+              }
+            ],
+            loading: false,
+            error: null,
+          });
+        } else if (reportType === 'revenue-expenditure') {
+          setReport({
+            title: {
+              governmentBody: 'Government of Rwanda',
+              program: 'HIV/NSP Budget Support of KIGEME District Hospital',
+              reportType: 'Financial Statement for the Year Ended 31 December 2024',
+              statement: 'Statement of Revenue and Expenditure for the period ended 31 December 2024',
+            },
+            sections: [
+              {
+                title: '1. REVENUES',
+                key: 'revenues',
+                rows: [],
+                subsections: [
+                  {
+                    title: '1.1 Revenue from Non-exchange',
+                    key: 'non-exchange',
+                    rows: [
+                      { label: 'Tax revenue', fy2024Value: 4200000, fy2023Value: 3800000, indentLevel: 1 },
+                      { label: 'Grants', fy2024Value: 6500000, fy2023Value: 6200000, indentLevel: 1 },
+                      { label: 'Transfers from central treasury', fy2024Value: 2300000, fy2023Value: 2100000, indentLevel: 1 },
+                      { label: 'Transfers from public entities', fy2024Value: 1500000, fy2023Value: 1300000, indentLevel: 1 },
+                      { label: 'Fines, penalties, and licenses', fy2024Value: 800000, fy2023Value: 700000, indentLevel: 1 },
+                    ]
+                  },
+                  {
+                    title: '1.2 Revenue from Exchange transactions',
+                    key: 'exchange',
+                    rows: [
+                      { label: 'Property income', fy2024Value: 500000, fy2023Value: 450000, indentLevel: 1 },
+                      { label: 'Sales of goods and services', fy2024Value: 1200000, fy2023Value: 1000000, indentLevel: 1 },
+                      { label: 'Proceeds from sale of capital items', fy2024Value: 0, fy2023Value: 0, indentLevel: 1 },
+                      { label: 'Other revenue', fy2024Value: 300000, fy2023Value: 250000, indentLevel: 1 },
+                    ]
+                  },
+                  {
+                    title: '1.3 Borrowings',
+                    key: 'borrowings',
+                    rows: [
+                      { label: 'Domestic borrowings', fy2024Value: 1500000, fy2023Value: 1200000, indentLevel: 1 },
+                      { label: 'External borrowings', fy2024Value: 2500000, fy2023Value: 2300000, indentLevel: 1 },
+                    ]
+                  }
+                ],
+                rows: [
+                  { label: 'TOTAL REVENUE', fy2024Value: 21300000, fy2023Value: 19300000, isTotal: true },
+                ],
+              },
+              {
+                title: '2. EXPENSES',
+                key: 'expenses',
+                rows: [
+                  { label: 'Compensation of employees', fy2024Value: 4800000, fy2023Value: 4500000, indentLevel: 1 },
+                  { label: 'Goods and services', fy2024Value: 3200000, fy2023Value: 2900000, indentLevel: 1 },
+                  { label: 'Grants and other transfers', fy2024Value: 1200000, fy2023Value: 1100000, indentLevel: 1 },
+                  { label: 'Subsidies', fy2024Value: 800000, fy2023Value: 700000, indentLevel: 1 },
+                  { label: 'Social assistance', fy2024Value: 1500000, fy2023Value: 1400000, indentLevel: 1 },
+                  { label: 'Finance costs', fy2024Value: 350000, fy2023Value: 320000, indentLevel: 1 },
+                  { label: 'Acquisition of fixed assets', fy2024Value: 2800000, fy2023Value: 2600000, indentLevel: 1 },
+                  { label: 'Repayment of borrowings', fy2024Value: 1200000, fy2023Value: 1100000, indentLevel: 1 },
+                  { label: 'Other expenses', fy2024Value: 700000, fy2023Value: 650000, indentLevel: 1 },
+                  { label: 'TOTAL EXPENSES', fy2024Value: 16550000, fy2023Value: 15270000, isTotal: true },
+                ],
+                isSummarySection: true
+              }
+            ],
+            loading: false,
+            error: null,
+          });
         } else {
           setReport(prev => ({
             ...prev,
-            error: `Report type '${reportType}' not supported`,
-            loading: false
+            loading: false,
+            error: `Unknown report type: ${reportType}`,
           }));
         }
       } catch (error) {
+        console.error('Error loading report data:', error);
         setReport(prev => ({
           ...prev,
           loading: false,
-          error: `Failed to load report data: ${error instanceof Error ? error.message : String(error)}`,
+          error: 'Failed to load report data. Please try again later.',
         }));
       }
     };

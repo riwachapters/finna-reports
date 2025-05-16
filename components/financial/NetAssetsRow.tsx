@@ -21,6 +21,7 @@ export const NetAssetsRowSchema = z.object({
   className: z.string().optional(),
   hideIfEmpty: z.boolean().optional(),
   editable: z.boolean().optional(),
+  error: z.record(z.string()).optional(),
   onValueChange: z.function()
     .args(z.object({ 
       field: z.enum(["surplus", "adjustments", "total", "note"]), 
@@ -50,6 +51,7 @@ export function NetAssetsRow({
   className,
   hideIfEmpty = false,
   editable = false,
+  error,
   onValueChange
 }: NetAssetsRowProps) {
   // State for editable values
@@ -124,6 +126,11 @@ export function NetAssetsRow({
     }
   };
   
+  // Get error message for field if present
+  const getErrorMessage = (field: string) => {
+    return error?.[field];
+  };
+  
   return (
     <TableRow 
       className={cn(
@@ -148,23 +155,35 @@ export function NetAssetsRow({
       {/* Surplus Cell */}
       <TableCell className="p-2 text-right">
         {isEditing === "surplus" ? (
-          <div className="flex">
+          <div className="flex flex-col">
             <input
               type="text"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onBlur={saveEdit}
               onKeyDown={(e) => e.key === "Enter" && saveEdit()}
-              className="w-full border rounded p-1 text-right text-sm"
+              className={cn(
+                "w-full border rounded p-1 text-right text-sm",
+                getErrorMessage("surplus") && "border-red-500"
+              )}
               autoFocus
             />
+            {getErrorMessage("surplus") && (
+              <span className="text-red-500 text-xs mt-1">{getErrorMessage("surplus")}</span>
+            )}
           </div>
         ) : (
           <div 
-            className={cn(editable && "cursor-pointer hover:bg-muted/50 px-2 py-1 rounded")}
+            className={cn(
+              editable && "cursor-pointer hover:bg-muted/50 px-2 py-1 rounded",
+              getErrorMessage("surplus") && "text-red-500"
+            )}
             onClick={() => startEditing("surplus")}
           >
             {formattedSurplus}
+            {getErrorMessage("surplus") && (
+              <span className="text-red-500 text-xs ml-1">!</span>
+            )}
           </div>
         )}
       </TableCell>
@@ -172,23 +191,35 @@ export function NetAssetsRow({
       {/* Adjustments Cell */}
       <TableCell className="p-2 text-right">
         {isEditing === "adjustments" ? (
-          <div className="flex">
+          <div className="flex flex-col">
             <input
               type="text"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onBlur={saveEdit}
               onKeyDown={(e) => e.key === "Enter" && saveEdit()}
-              className="w-full border rounded p-1 text-right text-sm"
+              className={cn(
+                "w-full border rounded p-1 text-right text-sm",
+                getErrorMessage("adjustments") && "border-red-500"
+              )}
               autoFocus
             />
+            {getErrorMessage("adjustments") && (
+              <span className="text-red-500 text-xs mt-1">{getErrorMessage("adjustments")}</span>
+            )}
           </div>
         ) : (
           <div 
-            className={cn(editable && "cursor-pointer hover:bg-muted/50 px-2 py-1 rounded")}
+            className={cn(
+              editable && "cursor-pointer hover:bg-muted/50 px-2 py-1 rounded",
+              getErrorMessage("adjustments") && "text-red-500"
+            )}
             onClick={() => startEditing("adjustments")}
           >
             {formattedAdjustments}
+            {getErrorMessage("adjustments") && (
+              <span className="text-red-500 text-xs ml-1">!</span>
+            )}
           </div>
         )}
       </TableCell>
@@ -196,26 +227,36 @@ export function NetAssetsRow({
       {/* Total Cell */}
       <TableCell className="p-2 text-right">
         {isEditing === "total" ? (
-          <div className="flex">
+          <div className="flex flex-col">
             <input
               type="text"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onBlur={saveEdit}
               onKeyDown={(e) => e.key === "Enter" && saveEdit()}
-              className="w-full border rounded p-1 text-right text-sm"
+              className={cn(
+                "w-full border rounded p-1 text-right text-sm",
+                getErrorMessage("total") && "border-red-500"
+              )}
               autoFocus
             />
+            {getErrorMessage("total") && (
+              <span className="text-red-500 text-xs mt-1">{getErrorMessage("total")}</span>
+            )}
           </div>
         ) : (
           <div 
             className={cn(
               editable && "cursor-pointer hover:bg-muted/50 px-2 py-1 rounded",
-              isTotal && "font-bold"
+              isTotal && "font-bold",
+              getErrorMessage("total") && "text-red-500"
             )}
             onClick={() => startEditing("total")}
           >
             {formattedTotal}
+            {getErrorMessage("total") && (
+              <span className="text-red-500 text-xs ml-1">!</span>
+            )}
           </div>
         )}
       </TableCell>
